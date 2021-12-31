@@ -11,11 +11,13 @@ namespace MoogleNY
         static void Main(string[] args)
         {
         }
-        public static Dictionary<string, int> RelevanciaDist(List<List<string>> listTxt, List<string> queryll, List<int> distancia)
+        public static Dictionary<string, double> RelevanciaDist(List<string> nombresTxt, List<List<string>> listTxt, List<string> queryll, List<int> distancia)
         {
-            //tengo que implementar que revise todas las palabras no solo la primera que encuentra
+            int contTxt = 0;
+            Dictionary<string, double> ordenado = new Dictionary<string, double>();
             foreach (var txt in listTxt)
             {
+                contTxt++;
                 int index = -1;
                 int pos = 0;
                 int varPos = 0;
@@ -26,7 +28,7 @@ namespace MoogleNY
                 {
                     if (pos == queryll.Count - 1) break;
                     index = txt.IndexOf(queryll[i], index + 1, hasta);
-                    if (index == -1 && pos == i) { pos++; i = pos; hasta = txt.Count - (pos + 1); }
+                    if (index == -1 && pos == i) { pos++; i = pos-1; hasta = txt.Count - (varPos + 1); promedio.Add(10-rel); rel = 10; }
                     if(index != -1) 
                     {
                         if (pos == i) varPos = index;
@@ -40,10 +42,15 @@ namespace MoogleNY
                         hasta = (txt.Count - index) >= 10 + dist ? 10 + dist : txt.Count - (index + 2); 
                     }
                     if (i == queryll.Count - 1 && pos != queryll.Count - 1) 
-                    { pos++; i= pos; index= -1; hasta = txt.Count - (pos + 1);}
+                    { i= pos-1; index= varPos; hasta = txt.Count - (varPos + 1);}
                 }
+                int suma = 0;
+                foreach (var num in promedio) { suma += num; }
+                double orden = suma / promedio.Count;
+                ordenado.Add(nombresTxt[contTxt], orden);
             }
-            return new Dictionary<string, int>();
+            
+            return ordenado;
         }
     }
 }
